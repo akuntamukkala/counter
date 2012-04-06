@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4"
+	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+	<display-name>Hello Java</display-name>
+
+	<context-param>
+		<param-name>contextInitializerClasses</param-name>
+		<param-value>org.cloudfoundry.services.CloudApplicationContextInitializer</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:root-context.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+
+
+	<filter>
+		<display-name>jsonp</display-name>
+		<filter-name>jsonp</filter-name>
+		<filter-class>org.jsonp.JsonpFilter</filter-class>
+		<init-param>
+			<param-name>jsonp</param-name>
+			<param-value>jsonpCallback</param-value>
+		</init-param>
+		<init-param>
+			<param-name>json-mime-types</param-name>
+			<param-value>application/json, application/x-json, text/json, text/x-json</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>jsonp</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+
+
+	<servlet>
+		<servlet-name>CounterIncrementServlet</servlet-name>
+		<servlet-class>org.cloudfoundry.samples.CounterIncrementServlet</servlet-class>
+	</servlet>
+
+	
+	<servlet-mapping>
+		<servlet-name>CounterIncrementServlet</servlet-name>
+		<url-pattern>/counter</url-pattern>
+	</servlet-mapping>
+
+	<mime-mapping>
+		<extension>json</extension>
+		<mime-type>application/json</mime-type>
+	</mime-mapping>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	<login-config>
+		<auth-method>BASIC</auth-method>
+	</login-config>
+
+</web-app>

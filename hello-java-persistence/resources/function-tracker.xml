@@ -1,0 +1,161 @@
+<Module>
+<ModulePrefs title="Dallas Team Goal Tracker*" width="300" height="250" thumbnail="">
+<Require feature="ads"/>
+</ModulePrefs>
+<UserPref name="clickurl" datatype="hidden" default_value="http://www.website.com.au"/>
+<UserPref name="aiturl" datatype="hidden" default_value="http://www.website.com.au"/>
+<Content type="html">
+<![CDATA[
+  <script type="text/javascript" src="http://www.google.com/jsapi?key=GOOGLEAPIKEYHERE" ></script>
+  
+  <input type=button id="FetchCountsBtn" value=" Fetch Current Totals " name=" Fetch Current Totals "> 
+  
+  <pre id="totalContactsMade">Total Contacts = </pre> 
+  # Contacts I made :   
+  <input type=text maxlength=40 name="delta" id="delta" style="width:100px;"> 
+  <input type=button id="ContactsMadeBtn" value=" Submit " name=" Submit "> 
+  <pre id="contactsUpdateStatus"></pre> 
+
+  <pre id="totalPlansShown">Total Plans = </pre> 
+  
+  # Plans I showed :  
+  <input type=text maxlength=40 name="plansShown" id="plansShown" style="width:100px;"> 
+  <input type=button id="PlansShownBtn" value=" Submit " name=" Submit "> 
+  <pre id="plansUpdateStatus"></pre>
+
+  <script> google.load("jquery", "1.4.2");  
+
+  </script> 
+
+ 
+  <script type="text/javascript"> $(function () { 
+    $("#FetchCountsBtn").click(function () {
+    try { 
+        var jsonp = true; 
+        var dataType = "json"; 
+        var incrementBy = 0; 
+        var xhr = $.ajax({ 
+          method: "GET", 
+          url: "http://hello-java-test-123.cloudfoundry.com/counter?plansShown=" + incrementBy, 
+          dataType: jsonp ? "jsonp" : dataType, 
+          jsonp: jsonp ? "jsonpCallback" : undefined, 
+          delta: 0, 
+          success: function (data) { 
+            $("#totalPlansShown").text("Total Plans = " + data.totalPlans);
+            $("#plansShown").val("");
+          } 
+        });
+        var xhr1 = $.ajax({ 
+          method: "GET", 
+          url: "http://hello-java-test-123.cloudfoundry.com/counter?delta=" + incrementBy, 
+          dataType: jsonp ? "jsonp" : dataType, 
+          jsonp: jsonp ? "jsonpCallback" : undefined, 
+          delta: 0, 
+          success: function (data) { 
+            $("#totalContactsMade").text("Total Contacts= " + data.counter);
+            $("#delta").val("");
+            
+          } 
+        });
+      } catch (ex) { 
+        alert(ex); 
+      } finally { 
+        return false; 
+      } 
+
+    });
+    $("#PlansShownBtn").click(function () { 
+    try { 
+        var jsonp = true; 
+        var dataType = "json"; 
+        var incrementBy = $("#plansShown").val(); 
+        if(isNaN(incrementBy)) { 
+          alert("Please enter a valid integer number greater than 0"); 
+          return; 
+        } 
+        if(incrementBy <= 0) { 
+          alert("Please enter a valid integer number greater than 0"); 
+          return; 
+        } 
+        var xhr = $.ajax({ 
+          method: "GET", 
+          url: "http://hello-java-test-123.cloudfoundry.com/counter?plansShown=" + incrementBy, 
+          dataType: jsonp ? "jsonp" : dataType, 
+          jsonp: jsonp ? "jsonpCallback" : undefined, 
+          delta: $("#plansShown").val(), 
+          success: function (data) { 
+            $("#totalPlansShown").text("Total Plans = " + data.totalPlans);
+            $("#plansUpdateStatus").text("# plans incremented by " + $("#plansShown").val());            
+            $("#plansShown").val("");
+          } 
+        }); 
+      } catch (ex) { 
+        alert(ex); 
+      } finally { 
+        return false; 
+      } 
+    });
+    
+    $("#ContactsMadeBtn").click(function () { 
+      try { 
+        var jsonp = true; 
+        var dataType = "json"; 
+        var incrementBy = $("#delta").val(); 
+        if(isNaN(incrementBy)) { 
+          alert("Please enter a valid integer number greater than 0"); 
+          return; 
+        } 
+        if(incrementBy <= 0) { 
+          alert("Please enter a valid integer number greater than 0"); 
+          return; 
+        } 
+        var xhr = $.ajax({ 
+          method: "GET", 
+          url: "http://hello-java-test-123.cloudfoundry.com/counter?delta=" + incrementBy, 
+          dataType: jsonp ? "jsonp" : dataType, 
+          jsonp: jsonp ? "jsonpCallback" : undefined, 
+          delta: $("#delta").val(), 
+          success: function (data) { 
+            $("#totalContactsMade").text("Total Contacts= " + data.counter);
+            $("#contactsUpdateStatus").text("# contacts incremented by " + $("#delta").val());
+            $("#delta").val("");
+          } 
+        }); 
+      } catch (ex) { 
+        alert(ex); 
+      } finally { 
+        return false; 
+      } 
+    }); }); </script> 
+    
+    <script type="text/javascript"> $(function () { 
+      $("a").click(function () { 
+        try { 
+          var jsonp = $("#jsonp")[0].checked; 
+          var dataType = $(this).attr("dataType") || "text"; 
+          var xhr = $.ajax({ 
+            method: "GET", 
+            url: "http://hello-java-test-123.cloudfoundry.com/" + $(this).attr("href"), 
+            dataType: jsonp ? "jsonp" : dataType, 
+            jsonp: jsonp ? "jsonpCallback" : undefined, 
+            success: function (data) { 
+              if (typeof data == "string") { 
+                $("pre").text("[text]\r\n\r\n" + data); 
+              } else { 
+                $("pre").text("[object]\r\n\r\n" + JSON.stringify(data)); 
+              } 
+            } 
+          }); 
+        } catch (ex) { 
+          alert(ex); 
+        } finally { 
+          return false; 
+          } }); }); </script>
+ <script type="text/javascript">
+   $(document).ready(function(){
+      $("#FetchCountsBtn").trigger("click");
+   });
+</script>
+]]>
+</Content>
+</Module>​
